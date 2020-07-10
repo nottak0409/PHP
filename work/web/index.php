@@ -37,7 +37,8 @@ include('../app/_parts/_header.php');
     <button>Post</button>
     <input type="hidden" name="token" value="<?= h($_SESSION['token']); ?>">
   </form>
-  <a href="dice.php">サイコロ</a>
+  <a href="dice.php">サイコロ</a><br>
+  <a href="bbs.php">簡易掲示板</a>
 
 <?php
 
