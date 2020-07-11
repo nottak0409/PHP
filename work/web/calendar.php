@@ -8,8 +8,6 @@ try{
 } catch (Exception $e){
   $thisMonth = new DateTime('first day of this month');
 }
-var_dump($thisMonth);
-exit;
 
 $yearMonth = $thisMonth->format('F Y');
 
