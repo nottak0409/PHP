@@ -1,59 +1,26 @@
 <?php
 
-try{
-  if(!isset($_GET['t']) || !preg_match('/\A\d{4}-\d{2}\z/', $_GET['t'])){
-    throw new Exception();
-  }
-  $thisMonth = new DateTime($_GET['t']);
-} catch (Exception $e){
-  $thisMonth = new DateTime('first day of this month');
+require 'calendar_function.php';
+function h($s) {
+  return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
 }
 
-$yearMonth = $thisMonth->format('F Y');
-
-$body = '';
-$period = new DatePeriod(
-  new DateTime('first day of'. $yearMonth),
-  new DateInterval('P1D'),
-  new DateTime('first day of'. $yearMonth . ' +1 month')
-);
-foreach ($period as $day) {
-  if ($day->format('w') % 7 === 0) { $body .= '<tr></tr>'; }
-  $body .= sprintf('<td class="youbi_%d">%d</td>', $day->format('w'),
-  $day->format('d'));
-}
-
-$tail = '';
-$lastDayOfPrevMonth = new DateTime('last day of' . $yearMonth . ' -1 month');
-while ($lastDayOfPrevMonth->format('w') < 6){
-  $tail = sprintf('<td class="gray">%d</td>', $lastDayOfPrevMonth->format('d')) .
-  $tail;
-  $lastDayOfPrevMonth->sub(new DateInterval('P1D'));
-}
-
-$head = '';
-$firstDayOfNextMonth = new DateTime('first day of' . $yearMonth . ' +1 month');
-while ($firstDayOfNextMonth->format('w') > 0){
-  $head .= sprintf('<td class="gray">%d</td>', $firstDayOfNextMonth->format('d'));
-  $firstDayOfNextMonth->add(new DateInterval('P1D'));
-}
-
-$html = '<tr>'. $tail . $body . $head . '</tr>';
+$cal = new \MyApp\Calendar();
 ?>
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
   <title>Calendar</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="/work/web/style.css">
 </head>
 <body>
 <table>
   <thead>
     <tr>
-      <th><a href="">&laquo;</a></th>
-      <th colspan="5"><?= $yearMonth; ?></th>
-      <th><a href="">&raquo;</a></th>
+      <th><a href="/work/web/calendar.php/?t=<?php echo h($cal->prev); ?>" >&laquo;</a></th>
+      <th colspan="5"><?= h($cal->yearMonth); ?></th>
+      <th><a href="/work/web/calendar.php/?t=<?php echo h($cal->next); ?>">&raquo;</a></th>
     </tr>
   </thead>
   <tbody>
@@ -66,11 +33,11 @@ $html = '<tr>'. $tail . $body . $head . '</tr>';
       <td>Fri</td>
       <td>Sat</td>
     </tr>
-    <?php echo $html; ?>
+    <?php $cal->show(); ?>
   </tbody>
   <tfoot>
     <tr>
-      <th colspan="7"><a href="">Today</a></th>
+      <th colspan="7"><a href="/work/web/calendar.php/">Today</a></th>
     </tr>
   </tfoot>
 </table>
