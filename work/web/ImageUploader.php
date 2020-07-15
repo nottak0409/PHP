@@ -22,13 +22,28 @@ class ImageUploader {
      //create thumbnail
      $this->_createThumbnail($savePath);
 
+     $_SESSION['success'] = 'Upload Done!';
     } catch(\Exception $e) {
-      echo $e->getMessage();
-      exit;
+      $_SESSION['error'] = $e->getMessage();
+      //exit;
     }
     //redirect
     header('Location: Upload_image.php');
     exit;
+  }
+
+  public function getResults(){
+    $succrss = null;
+    $error = null;
+    if (isset($_SESSION['success'])) {
+      $success = $_SESSION['success'];
+      unset($_SESSION['success']);
+    }
+    if (isset($_SESSION['error'])) {
+      $error = $_SESSION['error'];
+      unset($_SESSION['error']);
+    }
+    return [$success, $error];
   }
 
   public function getImages() {
@@ -47,7 +62,7 @@ class ImageUploader {
       }
     }
     array_multisort($files, SORT_DESC, $images);
-    return $images;   
+    return $images;
   }
 
   private function _createThumbnail($savePath){
