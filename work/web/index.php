@@ -40,7 +40,7 @@ include('../app/_parts/_header.php');
   <a href="dice.php">サイコロ</a><br>
   <a href="bbs.php">簡易掲示板</a><br>
   <a href="calendar.php">カレンダー</a><br>
-
+  <a href="upload_image.php">画像掲示板</a><br/>
 <?php
 
 include('../app/_parts/_footer.php');
